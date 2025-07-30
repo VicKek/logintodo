@@ -1,4 +1,4 @@
-package com.example.logintodo.domain;
+package com.example.logintodo.model;
 
 
 import lombok.AllArgsConstructor;
