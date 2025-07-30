@@ -1,6 +1,7 @@
 package com.example.logintodo.model;
 
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,16 +9,21 @@ import lombok.NoArgsConstructor;
 import java.util.HashSet;
 import java.util.Set;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Data
-public class User {
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+public class Person {
 
-    private  int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
     private String firstname;
     private String lastname;
     private String email;
-    private Set<Todo> todo= new HashSet<>();
 
+    @ManyToMany(mappedBy = "people")
+    private Set<Todo> todo= new HashSet<>();
 
 }
