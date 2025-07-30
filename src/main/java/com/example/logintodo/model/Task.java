@@ -13,7 +13,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Todo {
+public class Task {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +24,7 @@ public class Todo {
     private boolean done = false;
 
     @ManyToMany
-    @JoinTable(name="people_todo", joinColumns=@JoinColumn(name="todo_id"),
+    @JoinTable(name="person_task", joinColumns=@JoinColumn(name="task_id"),
     inverseJoinColumns = @JoinColumn(name = "person_id"))
     private Set<Person> people = new HashSet<>();
 

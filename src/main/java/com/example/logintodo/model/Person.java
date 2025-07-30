@@ -24,6 +24,6 @@ public class Person {
     private String email;
 
     @ManyToMany(mappedBy = "people")
-    private Set<Todo> todo= new HashSet<>();
+    private Set<Task> tasks = new HashSet<>();
 
 }
