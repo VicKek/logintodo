@@ -1,4 +1,4 @@
-package com.example.logintodo.controller;
+package com.example.logintodo.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
