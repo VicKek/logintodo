@@ -22,8 +22,8 @@
         <tr th:each="task : ${tasks}">
             <td th:text="${task.id}">1</td>
             <td th:text="${task.taskName}">Task Name</td>
-            <td th:text="${task.taskDescription}">Description</td>
-            <td th:text="${task.done ? 'Completed' : 'Pending'}">Status</td>
+            <td th:text="${task.description}">Description</td>
+            <td th:text="${task.status ? 'Completed' : 'Pending'}">Status</td>
         </tr>
         </tbody>
     </table>

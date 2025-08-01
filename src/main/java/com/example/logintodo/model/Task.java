@@ -19,8 +19,8 @@ public class Task {
     private int id;
 
     private String taskName;
-    private String taskDescription;
-    private boolean done = false;
+    private String description;
+    private boolean status = false;
 
     @ManyToMany(mappedBy = "tasks")
     @Builder.Default
@@ -47,20 +47,20 @@ public class Task {
         this.taskName = taskName;
     }
 
-    public String getTaskDescription() {
-        return taskDescription;
+    public String getDescription() {
+        return description;
     }
 
-    public void setTaskDescription(String taskDescription) {
-        this.taskDescription = taskDescription;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public boolean isDone() {
-        return done;
+    public boolean isStatus() {
+        return status;
     }
 
-    public void setDone(boolean done) {
-        this.done = done;
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 
     public Set<Person> getPeople() {

@@ -14,8 +14,8 @@ import java.util.List;
 @Component
 public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
-    private PersonRepository personRepository;
-    private TaskRepository taskRepository;
+    private final PersonRepository personRepository;
+    private final TaskRepository taskRepository;
 
     public DevBootstrap(PersonRepository personRepository,TaskRepository taskRepository){
         this.personRepository=personRepository;
@@ -30,51 +30,51 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
     private void initData(){
 
         Person p1= Person.builder()
-                .firstName("John")
-                .lastName("Doe")
-                .email("test")
+                .userName("JohnDoe")
+                .password("pass1")
+                .email("email1")
                 .tasks(new HashSet<>())
                 .build();
 
         Person p2= Person.builder()
-                .firstName("Le Bron")
-                .lastName("James")
-                .email("email")
+                .userName("Le Bron James")
+                .password("pass1")
+                .email("email2")
                 .tasks(new HashSet<>())
                 .build();
 
         Person p3= Person.builder()
-                .firstName("Victor")
-                .lastName("Kekas")
-                .email("nainai")
+                .userName("Victor Kekas")
+                .password("pass1")
+                .email("email3")
                 .tasks(new HashSet<>())
                 .build();
 
         Task t1= Task.builder()
                 .taskName("Go for a walk")
-                .taskDescription("Walk at least 5 KM")
-                .done(false)
+                .description("Walk at least 5 KM")
+                .status(false)
                 .people(new HashSet<>())
                 .build();
 
         Task t2= Task.builder()
                 .taskName("Go for a swim")
-                .taskDescription("Swim at least 2 KM")
-                .done(false)
+                .description("Swim at least 2 KM")
+                .status(false)
                 .people(new HashSet<>())
                 .build();
 
         Task t3= Task.builder()
                 .taskName("Do the dishes")
-                .taskDescription("Sink must be clean until mom gets home")
-                .done(false)
+                .description("Sink must be clean until mom gets home")
+                .status(false)
                 .people(new HashSet<>())
                 .build();
 
         Task t4= Task.builder()
                 .taskName("Water the plants")
-                .taskDescription("Water all the plants in the garden")
-                .done(false)
+                .description("Water all the plants in the garden")
+                .status(false)
                 .people(new HashSet<>())
                 .build();
 
