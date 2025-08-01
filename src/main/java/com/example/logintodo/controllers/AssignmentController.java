@@ -21,7 +21,7 @@ public class AssignmentController {
         this.personRepository = personRepository;
     }
 
-    @GetMapping("/assignment")
+    @RequestMapping("/assignment")
     public String showAssignmentPage(Model model) {
         List<Person> people = (List<Person>) personRepository.findAll();
         model.addAttribute("people", people);

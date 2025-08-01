@@ -75,12 +75,27 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <!-- Loop over tasks of the current person -->
                     <tr th:each="task : ${person.tasks}">
                         <td th:text="${task.id}">1</td>
                         <td th:text="${task.taskName}">Task Name</td>
-                        <td th:text="${task.description}">Task Description</td>
-                        <td th:text="${task.status}">Status</td>
+                        <td th:text="${task.description}">Description</td>
+                        <td th:text="${task.status ? 'Completed' : 'Not Completed'}">Status</td>
+                        <td>
+                            <form th:action="@{/tasks/{id}/toggleStatus(id=${task.id})}" method="post" th:object="${task}">
+                                <button type="submit" class="btn btn-sm btn-warning">
+                                    <span th:text="${task.status ? 'Mark as Incomplete' : 'Mark as Completed'}"></span>
+                                </button>
+                            </form>
+                        </td>
+                        <td>
+                            <a th:href="@{/tasks/edit/{id}(id=${task.id})}" class="btn btn-sm btn-info">Edit</a>
+                        </td>
+                        <td>
+                            <form th:action="@{/tasks/delete/{id}(id=${task.id})}" method="post">
+                                <input type="hidden" name="_method" value="delete"/>
+                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                            </form>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
