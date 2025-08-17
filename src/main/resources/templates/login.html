@@ -11,8 +11,8 @@
     <h2 class="mb-4 text-center">Login</h2>
 
     <div class="mb-3">
-        <label for="username" class="form-label">Username</label>
-        <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" required />
+        <label for="username-email" class="form-label">Username or Email</label>
+        <input type="text" class="form-control" id="username-email" name="username-email" placeholder="Enter username or Email" required />
     </div>
 
     <div class="mb-3">
@@ -22,6 +22,7 @@
 
     <button type="submit" class="btn btn-primary w-100">Login</button>
 </form>
+    <p class="mt-3 text-center">Don't have an account? <a href="/register">Register</a></p>
     <div th:if="${param.error}">
         <p class="text-danger mt-3">Invalid username or password.</p>
     </div>

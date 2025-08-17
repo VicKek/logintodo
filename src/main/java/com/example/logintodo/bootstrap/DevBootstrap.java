@@ -32,21 +32,21 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
         Person p1= Person.builder()
                 .userName("JohnDoe")
                 .password("pass1")
-                .email("email1")
+                .email("email1@gmail.com")
                 .tasks(new HashSet<>())
                 .build();
 
         Person p2= Person.builder()
                 .userName("Le Bron James")
                 .password("pass1")
-                .email("email2")
+                .email("email2@gmail.com")
                 .tasks(new HashSet<>())
                 .build();
 
         Person p3= Person.builder()
                 .userName("Victor Kekas")
                 .password("pass1")
-                .email("email3")
+                .email("email3@gmail.com")
                 .tasks(new HashSet<>())
                 .build();
 

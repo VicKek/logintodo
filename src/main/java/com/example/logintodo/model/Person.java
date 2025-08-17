@@ -4,6 +4,9 @@ package com.example.logintodo.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
 import java.util.HashSet;
 import java.util.Set;
 @Builder
@@ -19,6 +22,8 @@ public class Person {
 
     private String userName;
     private String password;
+
+    @Email
     private String email;
 
     @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
