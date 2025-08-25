@@ -20,7 +20,10 @@ public class Person {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @NotBlank
     private String userName;
+
+    @NotBlank
     private String password;
 
     @Email

@@ -6,6 +6,7 @@ import com.example.logintodo.repositories.PersonRepository;
 import com.example.logintodo.repositories.TaskRepository;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
@@ -16,10 +17,12 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 
     private final PersonRepository personRepository;
     private final TaskRepository taskRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public DevBootstrap(PersonRepository personRepository,TaskRepository taskRepository){
+    public DevBootstrap(PersonRepository personRepository, TaskRepository taskRepository, PasswordEncoder passwordEncoder){
         this.personRepository=personRepository;
         this.taskRepository=taskRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -29,23 +32,25 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 
     private void initData(){
 
+        System.out.println("#### INITIALIZING DATA ####");
+
         Person p1= Person.builder()
                 .userName("JohnDoe")
-                .password("pass1")
+                .password(passwordEncoder.encode("pass1"))
                 .email("email1@gmail.com")
                 .tasks(new HashSet<>())
                 .build();
 
         Person p2= Person.builder()
                 .userName("Le Bron James")
-                .password("pass1")
+                .password(passwordEncoder.encode("pass1"))
                 .email("email2@gmail.com")
                 .tasks(new HashSet<>())
                 .build();
 
         Person p3= Person.builder()
                 .userName("Victor Kekas")
-                .password("pass1")
+                .password(passwordEncoder.encode("pass1"))
                 .email("email3@gmail.com")
                 .tasks(new HashSet<>())
                 .build();
@@ -78,8 +83,6 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
                 .people(new HashSet<>())
                 .build();
 
-        System.out.println("#### ADDING DATA TO ");
-
         p1.addTask(t1);
         p1.addTask(t2);
         p1.addTask(t4);
@@ -93,7 +96,16 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 
         personRepository.saveAll(List.of(p1, p2, p3));
 
-        System.out.println("#### DATA ADDED ");
+        for (Person p : personRepository.findAll()) {
+            System.out.println( "####\n"+
+                    "Name= "+p.getUserName()+
+                    "\nEmail= "+ p.getEmail()+
+                    "\nPassword= " +p.getPassword());
+        }
+
+        System.out.println("#### DATA ADDED FROM DEV BOOTSTRAP ####");
+
+
 
     }
 
