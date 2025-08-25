@@ -96,13 +96,6 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 
         personRepository.saveAll(List.of(p1, p2, p3));
 
-        for (Person p : personRepository.findAll()) {
-            System.out.println( "####\n"+
-                    "Name= "+p.getUserName()+
-                    "\nEmail= "+ p.getEmail()+
-                    "\nPassword= " +p.getPassword());
-        }
-
         System.out.println("#### DATA ADDED FROM DEV BOOTSTRAP ####");
 
 

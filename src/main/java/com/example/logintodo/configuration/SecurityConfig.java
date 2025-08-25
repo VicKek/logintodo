@@ -1,60 +1,9 @@
-//package com.example.logintodo.configuration;
-//
-//import com.example.logintodo.services.PersonDetailsService;
-//import org.springframework.context.annotation.Bean;
-//import org.springframework.context.annotation.Configuration;
-//import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-//import org.springframework.security.crypto.password.PasswordEncoder;
-//import org.springframework.security.web.SecurityFilterChain;
-//
-//@Configuration
-//public class SecurityConfig {
-//
-//    private final PersonDetailsService personDetailsService;
-//
-//    public SecurityConfig(PersonDetailsService personDetailsService) {
-//        this.personDetailsService = personDetailsService;
-//    }
-//
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http
-//                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/login", "/register", "/css/**", "/js/**").permitAll()
-//                        .anyRequest().authenticated()
-//                )
-//                .formLogin(form -> form
-//                        .loginPage("/login")
-//                        .defaultSuccessUrl("/tasks", true)
-//                        .failureUrl("/login?error=true")   // <-- show error on bad login
-//                        .permitAll()
-//                )
-//                .logout(logout -> logout
-//                        .logoutUrl("/logout")
-//                        .logoutSuccessUrl("/login?logout")
-//                        .permitAll()
-//                )
-//                .userDetailsService(personDetailsService);  // <-- tell Spring to use your DB service
-//
-//        return http.build();
-//    }
-//
-//    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
-//}
-
-
 package com.example.logintodo.configuration;
 
-import com.example.logintodo.services.PersonDetailsService;
+import com.example.logintodo.model.Person;
+import com.example.logintodo.repositories.PersonRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -63,10 +12,10 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
 
-    private final PersonDetailsService personDetailsService;
+    private final PersonRepository personRepository;
 
-    public SecurityConfig(PersonDetailsService personDetailsService) {
-        this.personDetailsService = personDetailsService;
+    public SecurityConfig(PersonRepository personRepository) {
+        this.personRepository = personRepository;
     }
 
     @Bean
@@ -78,30 +27,22 @@ public class SecurityConfig {
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/tasks", true)       // where to go after success
-                        .failureUrl("/login?error=true")         // add error param when login fails
-                        .permitAll()
+                        .successHandler((request, response, authentication) -> {
+                            // redirect to user's assignments
+                            Person user = personRepository.findByUserName(authentication.getName())
+                                    .orElseThrow();
+                            response.sendRedirect("/assignments/" + user.getId());
+                        })
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout")
-                        .permitAll()
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            // store message in session
+                            request.getSession().setAttribute("logoutMessage", "You have successfully logged out.");
+                            response.sendRedirect("/login"); // same URL, no ?logout
+                        })
                 );
-
         return http.build();
-    }
-
-    @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(personDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-        return authConfig.getAuthenticationManager();
     }
 
     @Bean

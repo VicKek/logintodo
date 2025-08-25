@@ -2,6 +2,8 @@ package com.example.logintodo.controllers;
 
 import com.example.logintodo.model.Person;
 import com.example.logintodo.repositories.PersonRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,9 +22,17 @@ public class LoginController {
     }
 
     @GetMapping("/login")
-    public String showLoginForm(Model model) {
-        model.addAttribute("person", new Person());
-        return "login";
+    public String loginPage(HttpServletRequest request, Model model) {
+        // Check if there is a logout message in the session
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            String logoutMessage = (String) session.getAttribute("logoutMessage");
+            if (logoutMessage != null) {
+                model.addAttribute("logoutMessage", logoutMessage);
+                session.removeAttribute("logoutMessage"); // remove so it doesn't show again
+            }
+        }
+        return "login"; // your login.html
     }
 
     @PostMapping("/login")

@@ -19,13 +19,10 @@ import org.springframework.stereotype.Service;
 
         @Override
         public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-            System.out.println("🔎 loadUserByUsername called with: " + username);
 
             Person person = personRepository.findByUserName(username)
                     .or(() -> personRepository.findByEmail(username)) // allow email too
                     .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
-
-            System.out.println("✅ Found user: " + person.getUserName() + " | password (hashed): " + person.getPassword());
 
             return User.builder()
                     .username(person.getUserName())

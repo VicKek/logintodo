@@ -14,11 +14,12 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+
 public class Person {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @NotBlank
     private String userName;
@@ -41,11 +42,11 @@ public class Person {
         task.getPeople().add(this);
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -79,6 +80,19 @@ public class Person {
 
     public void setTasks(Set<Task> tasks) {
         this.tasks = tasks;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Person)) return false;
+        Person person = (Person) o;
+        return id != null && id.equals(person.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }
 
