@@ -1,9 +1,9 @@
 package com.example.logintodo.controllers;
 
+import com.example.logintodo.model.Assignment;
 import com.example.logintodo.model.Person;
-import com.example.logintodo.model.Task;
+import com.example.logintodo.repositories.AssignmentRepository;
 import com.example.logintodo.repositories.PersonRepository;
-import com.example.logintodo.repositories.TaskRepository;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,11 +17,12 @@ import java.util.List;
 public class AssignmentController {
 
     private final PersonRepository personRepository;
-    private final TaskRepository taskRepository;
+    private final AssignmentRepository assignmentRepository;
 
-    public AssignmentController(PersonRepository personRepository, TaskRepository taskRepository) {
+    public AssignmentController(PersonRepository personRepository,
+                                AssignmentRepository assignmentRepository) {
         this.personRepository = personRepository;
-        this.taskRepository = taskRepository;
+        this.assignmentRepository = assignmentRepository;
     }
 
     @GetMapping("/{id}")
@@ -33,26 +34,28 @@ public class AssignmentController {
             throw new AccessDeniedException("You cannot view other users' assignments");
         }
 
-        List<Task> completedTasks = loggedUser.getTasks().stream()
-                .filter(Task::isStatus)
+        List<Assignment> userAssignments = assignmentRepository.findByPersonId(id);
+
+        List<Assignment> completedAssignments = userAssignments.stream()
+                .filter(Assignment::isStatus)
                 .toList();
 
-        List<Task> pendingTasks = loggedUser.getTasks().stream()
-                .filter(t -> !t.isStatus())
+        List<Assignment> pendingAssignments = userAssignments.stream()
+                .filter(a -> !a.isStatus())
                 .toList();
 
-        model.addAttribute("completedTasks", completedTasks);
-        model.addAttribute("pendingTasks", pendingTasks);
+        model.addAttribute("completedAssignments", completedAssignments);
+        model.addAttribute("pendingAssignments", pendingAssignments);
         model.addAttribute("userId", loggedUser.getId());
 
         return "assignments";
     }
 
-    @PostMapping("/{userId}/toggle-ajax/{taskId}")
+    @PostMapping("/{userId}/toggle-ajax/{assignmentId}")
     @ResponseBody
-    public String toggleTaskStatusAjax(@PathVariable Long userId,
-                                       @PathVariable Long taskId,
-                                       Principal principal) {
+    public String toggleAssignmentStatusAjax(@PathVariable Long userId,
+                                             @PathVariable Long assignmentId,
+                                             Principal principal) {
         Person user = personRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -60,11 +63,12 @@ public class AssignmentController {
             throw new AccessDeniedException("Cannot modify others' tasks!");
         }
 
-        Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new RuntimeException("Task not found"));
+        Assignment assignment = assignmentRepository.findById(assignmentId)
+                .orElseThrow(() -> new RuntimeException("Assignment not found"));
 
-        task.setStatus(!task.isStatus());
-        taskRepository.save(task);
+        // Toggle only this user's assignment
+        assignment.setStatus(!assignment.isStatus());
+        assignmentRepository.save(assignment);
 
         return "success";
     }
