@@ -21,27 +21,48 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                // Authorization rules
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/register", "/static/css/**", "/static/js/**").permitAll()
+                        // Public endpoints
+                        .requestMatchers(
+                                "/login",
+                                "/register",
+                                "/h2-console/**",  // allow H2 console
+                                "/css/**",         // static CSS
+                                "/js/**"           // static JS
+                        ).permitAll()
+                        // Everything else requires authentication
                         .anyRequest().authenticated()
                 )
+                // Login configuration
                 .formLogin(form -> form
                         .loginPage("/login")
                         .successHandler((request, response, authentication) -> {
-                            // redirect to user's assignments
+                            // Redirect to the user's assignments after login
                             Person user = personRepository.findByUserName(authentication.getName())
-                                    .orElseThrow();
+                                    .orElseThrow(() -> new RuntimeException("User not found"));
                             response.sendRedirect("/assignments/" + user.getId());
                         })
                 )
+                // Logout configuration
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessHandler((request, response, authentication) -> {
-                            // store message in session
+                            // Store a message in session (for display on login page)
                             request.getSession().setAttribute("logoutMessage", "You have successfully logged out.");
-                            response.sendRedirect("/login"); // same URL, no ?logout
+                            response.sendRedirect("/login");
                         })
+                )
+                // CSRF configuration
+                .csrf(csrf -> csrf
+                        // Disable CSRF for H2 console to allow its POST requests
+                        .ignoringRequestMatchers("/h2-console/**")
+                )
+                // Headers configuration for H2 console frames
+                .headers(headers -> headers
+                        .frameOptions(frame -> frame.sameOrigin())
                 );
+
         return http.build();
     }
 
