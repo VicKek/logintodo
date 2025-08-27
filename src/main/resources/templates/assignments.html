@@ -31,9 +31,14 @@
         <ul class="list-group mb-3" id="pending-tasks">
             <li class="list-group-item d-flex justify-content-between align-items-center"
                 th:each="assignment : ${pendingAssignments}">
-                <span th:text="${assignment.task.taskName}"></span>
-                <button class="btn btn-sm btn-success float-end"
-                        th:attr="data-assignment-id=${assignment.id}">Mark Complete</button>
+                <div class="d-flex flex-column">
+                    <span class="fw-bold fs-5" th:text="${assignment.task.taskName}"></span>
+                    <span class="text-muted small" th:text="${assignment.task.description}"></span>
+                </div>
+                <button class="btn btn-sm btn-success"
+                        th:attr="data-assignment-id=${assignment.id}">
+                    Mark Complete
+                </button>
             </li>
         </ul>
 
@@ -41,9 +46,14 @@
         <ul class="list-group mb-3" id="completed-tasks">
             <li class="list-group-item d-flex justify-content-between align-items-center"
                 th:each="assignment : ${completedAssignments}">
-                <span th:text="${assignment.task.taskName}"></span>
-                <button class="btn btn-sm btn-warning float-end"
-                        th:attr="data-assignment-id=${assignment.id}">Mark Pending</button>
+                <div class="d-flex flex-column">
+                    <span class="fw-bold fs-5" th:text="${assignment.task.taskName}"></span>
+                    <span class="text-muted small" th:text="${assignment.task.description}"></span>
+                </div>
+                <button class="btn btn-sm btn-warning"
+                        th:attr="data-assignment-id=${assignment.id}">
+                    Mark Pending
+                </button>
             </li>
         </ul>
     </div>
