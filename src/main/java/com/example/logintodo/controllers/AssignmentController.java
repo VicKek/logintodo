@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.List;
 
+
 @Controller
 @RequestMapping("/assignments")
 public class AssignmentController {
@@ -19,8 +20,7 @@ public class AssignmentController {
     private final PersonRepository personRepository;
     private final AssignmentRepository assignmentRepository;
 
-    public AssignmentController(PersonRepository personRepository,
-                                AssignmentRepository assignmentRepository) {
+    public AssignmentController(PersonRepository personRepository, AssignmentRepository assignmentRepository) {
         this.personRepository = personRepository;
         this.assignmentRepository = assignmentRepository;
     }
@@ -51,25 +51,5 @@ public class AssignmentController {
         return "assignments";
     }
 
-    @PostMapping("/{userId}/toggle-ajax/{assignmentId}")
-    @ResponseBody
-    public String toggleAssignmentStatusAjax(@PathVariable Long userId,
-                                             @PathVariable Long assignmentId,
-                                             Principal principal) {
-        Person user = personRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        if (!user.getUserName().equals(principal.getName())) {
-            throw new AccessDeniedException("Cannot modify others' tasks!");
-        }
-
-        Assignment assignment = assignmentRepository.findById(assignmentId)
-                .orElseThrow(() -> new RuntimeException("Assignment not found"));
-
-        // Toggle only this user's assignment
-        assignment.setStatus(!assignment.isStatus());
-        assignmentRepository.save(assignment);
-
-        return "success";
-    }
 }
+

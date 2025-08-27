@@ -31,14 +31,22 @@
         <ul class="list-group mb-3" id="pending-tasks">
             <li class="list-group-item d-flex justify-content-between align-items-center"
                 th:each="assignment : ${pendingAssignments}">
+
                 <div class="d-flex flex-column">
                     <span class="fw-bold fs-5" th:text="${assignment.task.taskName}"></span>
                     <span class="text-muted small" th:text="${assignment.task.description}"></span>
                 </div>
-                <button class="btn btn-sm btn-success"
-                        th:attr="data-assignment-id=${assignment.id}">
-                    Mark Complete
-                </button>
+
+                <div class="btn-group">
+                    <button class="btn btn-sm btn-primary complete-btn"
+                            th:attr="data-id=${assignment.id}">
+                        Mark Complete
+                    </button>
+                    <button class="btn btn-sm btn-danger delete-btn"
+                            th:attr="data-id=${assignment.id}">
+                        Delete
+                    </button>
+                </div>
             </li>
         </ul>
 
@@ -46,21 +54,35 @@
         <ul class="list-group mb-3" id="completed-tasks">
             <li class="list-group-item d-flex justify-content-between align-items-center"
                 th:each="assignment : ${completedAssignments}">
+
                 <div class="d-flex flex-column">
                     <span class="fw-bold fs-5" th:text="${assignment.task.taskName}"></span>
                     <span class="text-muted small" th:text="${assignment.task.description}"></span>
                 </div>
-                <button class="btn btn-sm btn-warning"
-                        th:attr="data-assignment-id=${assignment.id}">
-                    Mark Pending
-                </button>
+
+                <div class="btn-group">
+                    <button class="btn btn-sm btn-warning pending-btn"
+                            th:attr="data-id=${assignment.id}">
+                        Mark Pending
+                    </button>
+                    <button class="btn btn-sm btn-danger delete-btn"
+                            th:attr="data-id=${assignment.id}">
+                        Delete
+                    </button>
+                </div>
             </li>
         </ul>
+        <form id="addAssignmentForm" class="d-flex gap-2">
+            <input type="text" name="taskName" placeholder="Task name" class="form-control" required>
+            <input type="text" name="description" placeholder="Description" class="form-control">
+            <button type="submit" class="btn btn-success">Add Task</button>
+        </form>
+
     </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-<script src="/js/assignment.js"></script>
+<script src="/js/todobuttons.js"></script>
 
 </body>
 </html>
