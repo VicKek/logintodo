@@ -22,12 +22,14 @@ public class Person {
     private Long id;
 
     @NotBlank
+    @Column(unique = true)
     private String userName;
 
     @NotBlank
     private String password;
 
     @Email
+    @Column(unique = true)
     private String email;
 
     @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
