@@ -22,7 +22,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
+                        .requestMatchers("/index",
+                                "/",
                                 "/login",
                                 "/register",
                                 "/h2-console/**",

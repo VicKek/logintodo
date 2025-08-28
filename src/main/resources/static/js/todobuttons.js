@@ -8,49 +8,73 @@ document.addEventListener("DOMContentLoaded", () => {
         const header = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
         return { [header]: token };
     }
-if (addAssignmentForm) {
-    addAssignmentForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
 
-        const formData = new FormData(addAssignmentForm);
-        const payload = {
-            taskName: formData.get("taskName"),
-            description: formData.get("description")
-        };
+    if (addAssignmentForm) {
+        addAssignmentForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
 
-        const response = await fetch("/assignments/ajax/add", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                ...getCsrfHeaders()
-            },
-            body: JSON.stringify(payload)
+            const formData = new FormData(addAssignmentForm);
+            const payload = {
+                taskName: formData.get("taskName"),
+                description: formData.get("description")
+            };
+
+            const response = await fetch("/assignments/ajax/add", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    ...getCsrfHeaders()
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (response.ok) {
+                const assignment = await response.json();
+
+                const li = document.createElement("li");
+                li.className = "list-group-item d-flex justify-content-between align-items-center";
+
+                const divLeft = document.createElement("div");
+                divLeft.className = "d-flex flex-column";
+
+                const spanName = document.createElement("span");
+                spanName.className = "fw-bold fs-5";
+                spanName.textContent = assignment.task.taskName;
+
+                const spanDesc = document.createElement("span");
+                spanDesc.className = "text-muted small";
+                spanDesc.textContent = assignment.task.description;
+
+                divLeft.appendChild(spanName);
+                divLeft.appendChild(spanDesc);
+
+                const divRight = document.createElement("div");
+                divRight.className = "d-flex gap-2";
+
+                const completeBtn = document.createElement("button");
+                completeBtn.className = "btn btn-sm btn-primary complete-btn";
+                completeBtn.setAttribute("data-id", assignment.id);
+                completeBtn.textContent = "Mark Complete";
+
+                const deleteBtn = document.createElement("button");
+                deleteBtn.className = "btn btn-sm btn-danger delete-btn";
+                deleteBtn.setAttribute("data-id", assignment.id);
+                deleteBtn.textContent = "Delete";
+
+                divRight.appendChild(completeBtn);
+                divRight.appendChild(deleteBtn);
+
+                li.appendChild(divLeft);
+                li.appendChild(divRight);
+
+                pendingTasks.appendChild(li);
+
+                addAssignmentForm.reset();
+            } else {
+                alert("Failed to add assignment");
+            }
         });
-
-        if (response.ok) {
-            const assignment = await response.json();
-
-            const li = document.createElement("li");
-            li.className = "list-group-item d-flex justify-content-between align-items-center";
-            li.setAttribute("data-id", assignment.id);
-            li.innerHTML = `
-                <div class="d-flex flex-column">
-                    <span class="fw-bold fs-5">${assignment.task.taskName}</span>
-                    <span class="text-muted small">${assignment.task.description}</span>
-                </div>
-                <div class="btn-group">
-                    <button class="btn btn-sm btn-primary complete-btn" data-id="${assignment.id}">Mark Complete</button>
-                    <button class="btn btn-sm btn-danger delete-btn" data-id="${assignment.id}">Delete</button>
-                </div>
-            `;
-            pendingTasks.appendChild(li);
-            addAssignmentForm.reset();
-        } else {
-            alert("Failed to add assignment");
-        }
-    });
-}
-
+    }
 
         function setupDeleteHandler(listElement) {
             listElement.addEventListener("click", async (e) => {
