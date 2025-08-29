@@ -28,7 +28,8 @@ public class SecurityConfig {
                                 "/register",
                                 "/h2-console/**",
                                 "/css/**",
-                                "/js/**"
+                                "/js/**",
+                                "imgs/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
